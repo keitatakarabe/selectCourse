@@ -39,10 +39,13 @@ class ViewController: UIViewController {
 	
 	let spot:[[String]] = [["木1.png","木2.png","木3.png"],["人工物.png","人工物2.png","人工物3.png"],["海.png","海2.png","海3.png"]]
 	var image:[UIImageView] = []
+	var Icon:[UIImageView] = []
 	// コースのタイトル
 	let spotName:[String] = ["草原コース","人工物コース","海コース"]
 	// コースの説明文
 	let spotText:[String] = ["このコースは自然に囲まれたコースです。\n心を落ち着かせのんびりと散策しましょう。","このコースでは不思議な建設物を中心に散策することができます。","北海道ならではの海を見ながら散策できるコース。"]
+	// アイコン
+	let IconName:[[String]] = [["歩き.png", "車.png"],["車.png"],["歩き.png", "歩き.png"]]
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -86,8 +89,20 @@ class ViewController: UIViewController {
 		return imgView
 	}
 	
+	func readIcon(_ image: String, posX:CGFloat, posY:CGFloat, imgWidth:CGFloat, imgHeight:CGFloat) -> UIImageView {
+		// imageに配列から取り出したファイル名を代入して画像を読み込む
+		let img:UIImage = UIImage(named: image)!
+		// UIImageviewを画像を入れて作る
+		let imgView = UIImageView(image: img)
+		// 画像を描写するサイズを決める
+		imgView.frame = CGRect(x: posX, y: posY, width: imgWidth, height: imgHeight)
+		imgView.contentMode = UIView.ContentMode.scaleAspectFit
+		return imgView
+	}
+	
 	func setView(_ View: UIView, Shadow: UIView, ShadowButton: UIView, Title: UILabel, Text: UILabel, Button: UIButton, position: CGFloat, theme: Int){
 		image.removeAll()
+		Icon.removeAll()
 		// Viewの影の設定
 		Shadow.frame = CGRect(x: Scroll.bounds.width * position * 1.1, y: 0, width: Scroll.bounds.width, height: Scroll.bounds.height)
 		// 影の色
@@ -112,7 +127,7 @@ class ViewController: UIViewController {
 		// フォントのサイズ
 		Title.font = UIFont.systemFont(ofSize: 24)
 		// 文章の設定
-		Text.frame = CGRect(x: View.bounds.width * 0.015, y: View.bounds.height * 0.616, width: View.bounds.width * 0.76, height: View.bounds.height * 0.228)
+		Text.frame = CGRect(x: View.bounds.width * 0.015, y: View.bounds.height * 0.138 + View.bounds.width * 0.3125, width: View.bounds.width * 0.76, height: View.bounds.height * 0.228)
 		// 何行で表示するか
 		Text.numberOfLines = 2
 		// 単語で改行する（日本語にも有効みたい）
@@ -134,6 +149,11 @@ class ViewController: UIViewController {
 		for (i,value) in spot[theme].enumerated(){
 			image.append(readImage(value, View: View, trimX: 0, trimY: 0, trimWidth: 3000, trimHeight: 3000, posX: View.bounds.width * 0.015 + View.bounds.width * 0.3125 * CGFloat(i) + View.bounds.width * 0.015 * CGFloat(i), posY: View.bounds.height * 0.138, imgWidth: View.bounds.width * 0.3125, imgHeight: View.bounds.width * 0.3125))
 			View.addSubview(image[i])
+		}
+		// アイコンをセットする（右から左にセットするので拡張性がある）
+		for (i,value) in IconName[theme].enumerated(){
+			Icon.append(readIcon(value, posX: View.bounds.width * 0.8825 - View.bounds.width * 0.11 * CGFloat(i), posY: View.bounds.height * 0.015, imgWidth: View.bounds.width * 0.1, imgHeight: View.bounds.height * 0.1))
+			View.addSubview(Icon[i])
 		}
 	}
 	
